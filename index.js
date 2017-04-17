@@ -13,6 +13,7 @@ document.querySelector('#convert').addEventListener('click', execute)
 
 document.querySelector('#input').addEventListener('keyup', (event) => {
 	if (event.keyCode == 13) {
+		event.preventDefault()
 		execute()
 	}
 })

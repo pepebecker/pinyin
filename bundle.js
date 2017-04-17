@@ -546,9 +546,9 @@ const numberToMark = (text) => {
 		if (matchedVovels) {
 			let vovel = matchedVovels[matchedVovels.length-1]
 
+			if (text.match('ou')) vovel = 'o'
 			if (text.match('a')) vovel = 'a'
 			if (text.match('e')) vovel = 'e'
-			if (text.match('ou')) vovel = 'o'
 
 			text = text.replace(vovel, vovels[vovel][tone-1])
 		}
@@ -575,6 +575,7 @@ document.querySelector('#convert').addEventListener('click', execute)
 
 document.querySelector('#input').addEventListener('keyup', (event) => {
 	if (event.keyCode == 13) {
+		event.preventDefault()
 		execute()
 	}
 })
