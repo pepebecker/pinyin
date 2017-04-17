@@ -1,10 +1,18 @@
 const convert = require('pinyin-converter')
 
-document.querySelector('#convert').addEventListener('click', (event) => {
+const execute = () => {
 	const text = document.querySelector('#input').value
 	if (text) {
-		convert(text).then((data) => {
+		convert(text, {keepSpacing: true}).then((data) => {
 			document.querySelector('#output').innerHTML = data
 		}, console.error)
+	}
+}
+
+document.querySelector('#convert').addEventListener('click', execute)
+
+document.querySelector('#input').addEventListener('keyup', (event) => {
+	if (event.keyCode == 13) {
+		execute()
 	}
 })

@@ -562,15 +562,22 @@ module.exports = {unicodeToHanzi, vovels, getToneNumber, removeTone, markToNumbe
 },{}],10:[function(require,module,exports){
 const convert = require('pinyin-converter')
 
-document.querySelector('#convert').addEventListener('click', (event) => {
+const execute = () => {
 	const text = document.querySelector('#input').value
 	if (text) {
-		convert(text).then((data) => {
+		convert(text, {keepSpacing: true}).then((data) => {
 			document.querySelector('#output').innerHTML = data
 		}, console.error)
 	}
-})
+}
 
+document.querySelector('#convert').addEventListener('click', execute)
+
+document.querySelector('#input').addEventListener('keyup', (event) => {
+	if (event.keyCode == 13) {
+		execute()
+	}
+})
 },{"pinyin-converter":5}],11:[function(require,module,exports){
 
 },{}],12:[function(require,module,exports){
