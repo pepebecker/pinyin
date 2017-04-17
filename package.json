@@ -1,0 +1,17 @@
+{
+  "name": "pinyin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "watchify index.js -o bundle.js"
+  },
+  "author": "Pepe Becker <mail@pepebecker.com> (http://pepebecker.com)",
+  "license": "ISC",
+  "dependencies": {
+    "pinyin-converter": "^1.0.0"
+  },
+  "devDependencies": {
+    "watchify": "^3.9.0"
+  }
+}
