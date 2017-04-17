@@ -12,6 +12,8 @@ body {
 	height: 40px;
 	padding: 5px 10px;
 	font-size: 1rem;
+	border-radius: 0;
+	border: 1px solid #CCC;
 }
 
 #convert {
@@ -22,12 +24,12 @@ body {
 	border: 2px solid rgb(231, 76, 60);
 	height: 40px;
 	font-size: 1rem;
-	background: rgb(231, 76, 60, 0.3);
+	background: rgba(231, 76, 60, 0.3);
 	transition: background ease 0.2s;
 }
 
 #convert:hover {
-	background: rgb(231, 76, 60, 1);
+	background: rgb(231, 76, 60);
 }
 
 #convert:active {
@@ -37,7 +39,6 @@ body {
 
 #convert:focus {
 	outline: none;
-	background: rgb(231, 76, 60, 1);
 }
 
 #output {
@@ -51,11 +52,16 @@ body {
 }
 
 .placeholder {
-	display: none;
 	font-size: 1rem;
 	color: gray;
 }
 
-.placeholder.active {
-	display: block;
+.noselect {
+	-webkit-touch-callout: none; /* iOS Safari */
+	  -webkit-user-select: none; /* Safari */
+	   -khtml-user-select: none; /* Konqueror HTML */
+		 -moz-user-select: none; /* Firefox */
+		  -ms-user-select: none; /* Internet Explorer/Edge */
+			  user-select: none; /* Non-prefixed version, currently
+									supported by Chrome and Opera */
 }
