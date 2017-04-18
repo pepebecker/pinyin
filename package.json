@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify index.js -o bundle.js"
+    "watch": "watchify index.js -o bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
   "author": "Pepe Becker <mail@pepebecker.com> (http://pepebecker.com)",
   "license": "ISC",
@@ -12,6 +12,8 @@
     "pinyin-converter": "^1.0.0"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
     "watchify": "^3.9.0"
   }
 }

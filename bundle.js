@@ -141,7 +141,7 @@ if (!isNode) {
 
 module.exports = find
 
-}).call(this,"/../../Developer/Node/chinese/hanzi-to-pinyin/node_modules/find-hanzi")
+}).call(this,"/../../Developer/Node/chinese/pinyin-or-hanzi/node_modules/find-hanzi")
 },{"./cangjie.json":1,"detect-node":3,"fs":12,"path":13,"pinyin-utils":10,"readline":12}],3:[function(require,module,exports){
 (function (global){
 module.exports = false;
@@ -614,25 +614,28 @@ const numberToMark = (text) => {
 module.exports = {unicodeToHanzi, vovels, getToneNumber, removeTone, markToNumber, numberToMark}
 
 },{}],11:[function(require,module,exports){
-const convert = require('pinyin-converter')
+'use strict';
 
-const execute = () => {
-	const text = document.querySelector('#input').value
+var convert = require('pinyin-converter');
+
+var execute = function execute() {
+	var text = document.querySelector('#input').value;
 	if (text) {
-		convert(text, {keepSpacing: true}).then((data) => {
-			document.querySelector('#output').innerHTML = data
-		}, console.log)
+		convert(text, { keepSpacing: true }).then(function (data) {
+			document.querySelector('#output').innerHTML = data;
+		}, console.log);
 	}
-}
+};
 
-document.querySelector('#convert').addEventListener('click', execute)
+document.querySelector('#convert').addEventListener('click', execute);
 
-document.querySelector('#input').addEventListener('keyup', (event) => {
+document.querySelector('#input').addEventListener('keyup', function (event) {
 	if (event.keyCode == 13) {
-		event.preventDefault()
-		execute()
+		event.preventDefault();
+		execute();
 	}
-})
+});
+
 },{"pinyin-converter":6}],12:[function(require,module,exports){
 
 },{}],13:[function(require,module,exports){
