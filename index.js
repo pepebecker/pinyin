@@ -1,5 +1,8 @@
 'use strict'
 
+require("babel-core/register")
+require("babel-polyfill")
+
 const convert = require('pinyin-converter')
 
 const execute = () => {
