@@ -5,7 +5,7 @@ const execute = () => {
 	if (text) {
 		convert(text, {keepSpacing: true}).then((data) => {
 			document.querySelector('#output').innerHTML = data
-		}, console.error)
+		}, console.log)
 	}
 }
 

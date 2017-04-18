@@ -33,88 +33,142 @@ module.exports={
 
 const cangjie = require('./cangjie.json')
 const utils = require('pinyin-utils')
+const isNode = require('detect-node')
 const readline = require('readline')
 const fs = require('fs')
 const path = require('path')
 
-const find = (query, options = {}) => new Promise((yay, nay) => {
-	const rl = readline.createInterface({
-		input: fs.createReadStream(path.join(__dirname, './data.txt'))
-	})
+let storedData
 
-	let matches = []
+let matches = []
 
-	rl.on('line', function (line) {
-		const params = line.split('\t')
+const onLine = (line, query, options, foundMatch) => {
+	const params = line.split('\t')
 
-		let item = {
-			unicode: params[0],
-			hanzi: params[1],
-			pinyin: params[2],
-			cangjie: params[3],
-			definition: params[4],
-			frequency: params[5]
+	let item = {
+		unicode: params[0],
+		hanzi: params[1],
+		pinyin: params[2],
+		cangjie: params[3],
+		definition: params[4],
+		frequency: params[5]
+	}
+
+	if (options.search) {
+		if (item.definition.match(new RegExp('\\b(' + query + ')\\b'))) {
+			matches.push(item)
 		}
-
-		if (options.search) {
-			if (item.definition.match(new RegExp('\\b(' + query + ')\\b'))) {
+	} else {
+		if (options.fuzzy) {
+			if (utils.removeTone(query) && utils.removeTone(query) === utils.removeTone(item.pinyin)) {
 				matches.push(item)
 			}
 		} else {
-			if (options.fuzzy) {
-				if (utils.removeTone(query) && utils.removeTone(query) === utils.removeTone(item.pinyin)) {
-					matches.push(item)
-				}
-			} else {
-				if (query === item.mandarin || query === item.pinyin) {
-					matches.push(item)
-				}
-			}
-			if (query === item.cangjie || query === item.unicode || query === item.hanzi) {
-				matches = [item]
-				rl.close()
+			if (query === item.mandarin || query === item.pinyin) {
+				matches.push(item)
 			}
 		}
-	})
+		if (query === item.cangjie || query === item.unicode || query === item.hanzi) {
+			matches = [item]
+			foundMatch()
+		}
+	}
+}
 
-	rl.on('close', function () {
-		if (matches.length > 0) {
-			matches = matches.map((match) => {
-				let code = match.cangjie.split('')
-				code = code.map((c) => cangjie[c])
-				match.kangjie = code.join('')
-				match.frequency = match.frequency || 9
-				return match
-			})
-			matches = matches.sort((a, b) => a.frequency - b.frequency)
-			if (options.results) {
-				matches = matches.slice(0, options.results)
-			}
-			yay(matches)
-		} else {
-			nay('No matches found')
+const onDone = (options, yay, nay) => {
+	if (matches.length > 0) {
+		matches = matches.map((match) => {
+			let code = match.cangjie.split('')
+			code = code.map((c) => cangjie[c])
+			match.kangjie = code.join('')
+			match.frequency = match.frequency || 9
+			return match
+		})
+		matches = matches.sort((a, b) => a.frequency - b.frequency)
+		if (options && options.results) {
+			matches = matches.slice(0, options.results)
 		}
-	})
+		yay && yay(matches)
+	} else {
+		nay && nay('No matches found')
+	}
+}
+
+const loadData = (done) => {
+	if (storedData) {
+		done && done(storedData)
+	} else {
+		const client = new XMLHttpRequest()
+		client.open('GET', '/data.txt')
+		client.onreadystatechange = function() {
+			storedData = client.responseText.split('\n')
+			console.log('Data sucessfully loaded')
+			loadData()
+		}
+		client.send()
+	}
+}
+
+const find = (query, options = {}) => new Promise((yay, nay) => {
+	if (isNode) {
+		const rl = readline.createInterface({
+			input: fs.createReadStream(path.join(__dirname, './data.txt'))
+		})
+
+		rl.on('line', function (line) {
+			onLine(line, query, options, () => rl.close())
+		})
+
+		rl.on('close', function () {
+			onDone(options, yay, nay)
+		})
+	} else {
+		loadData((data) => {
+			for (let line of data) {
+				onLine(line, query, options, () => {
+					onDone()
+					return
+				})
+			}
+			onDone(options, yay, nay)
+		})
+	}
 })
+
+if (!isNode) {
+	loadData()
+}
 
 module.exports = find
 
 }).call(this,"/../../Developer/Node/chinese/hanzi-to-pinyin/node_modules/find-hanzi")
-},{"./cangjie.json":1,"fs":11,"path":12,"pinyin-utils":9,"readline":11}],3:[function(require,module,exports){
+},{"./cangjie.json":1,"detect-node":3,"fs":12,"path":13,"pinyin-utils":10,"readline":12}],3:[function(require,module,exports){
+(function (global){
+module.exports = false;
+
+// Only Node.JS has a process variable that is of [[Class]] process
+try {
+ module.exports = Object.prototype.toString.call(global.process) === '[object process]' 
+} catch(e) {}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],4:[function(require,module,exports){
 'use strict'
 
 const findHanzi = require('find-hanzi')
 const so = require('so')
 
-const convert = (text, options = {}) => new Promise((yay, nay) => {
+const convert = (text) => new Promise((yay, nay) => {
 	so(function*(){
 		let chars = text.split('')
+		chars = chars.filter((char) => char != ' ')
+
 		let list = []
 
 		for (let char of chars) {
 			yield findHanzi(char).then((data) => {
 				list.push(data[0].pinyin)
-			}, console.error)
+			}, nay)
 		}
 
 		yay(list.join(' '))
@@ -123,7 +177,7 @@ const convert = (text, options = {}) => new Promise((yay, nay) => {
 
 module.exports = convert
 
-},{"find-hanzi":2,"so":4}],4:[function(require,module,exports){
+},{"find-hanzi":2,"so":5}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -167,7 +221,7 @@ function so(fn) {
     }
   };
 }
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict'
 
 const hanziToPinyin = require('hanzi-to-pinyin')
@@ -212,7 +266,7 @@ const convert = (text, options = {}) => new Promise((yay, nay) => {
 
 module.exports = convert
 
-},{"hanzi-to-pinyin":3,"pinyin-or-hanzi":6,"pinyin-split":8,"pinyin-utils":9}],6:[function(require,module,exports){
+},{"hanzi-to-pinyin":4,"pinyin-or-hanzi":7,"pinyin-split":9,"pinyin-utils":10}],7:[function(require,module,exports){
 'use strict'
 
 const utils = require('pinyin-utils')
@@ -248,7 +302,7 @@ const check = (text) => new Promise((yay, nay) => {
 
 module.exports = check
 
-},{"find-hanzi":2,"pinyin-utils":9}],7:[function(require,module,exports){
+},{"find-hanzi":2,"pinyin-utils":10}],8:[function(require,module,exports){
 module.exports=[
 	"uāng",
 	"iāng",
@@ -412,7 +466,7 @@ module.exports=[
 	"a"
 ]
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict'
 
 const finals = require('./finals.json')
@@ -455,7 +509,7 @@ const split = (text, keepSpaces = false) => new Promise((yay, nay) => {
 
 module.exports = split
 
-},{"./finals.json":7}],9:[function(require,module,exports){
+},{"./finals.json":8}],10:[function(require,module,exports){
 'use strict'
 
 const unicodeToHanzi = (unicode) => {
@@ -559,7 +613,7 @@ const numberToMark = (text) => {
 
 module.exports = {unicodeToHanzi, vovels, getToneNumber, removeTone, markToNumber, numberToMark}
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 const convert = require('pinyin-converter')
 
 const execute = () => {
@@ -567,7 +621,7 @@ const execute = () => {
 	if (text) {
 		convert(text, {keepSpacing: true}).then((data) => {
 			document.querySelector('#output').innerHTML = data
-		}, console.error)
+		}, console.log)
 	}
 }
 
@@ -579,9 +633,9 @@ document.querySelector('#input').addEventListener('keyup', (event) => {
 		execute()
 	}
 })
-},{"pinyin-converter":5}],11:[function(require,module,exports){
+},{"pinyin-converter":6}],12:[function(require,module,exports){
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -809,7 +863,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":13}],13:[function(require,module,exports){
+},{"_process":14}],14:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -991,4 +1045,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[10]);
+},{}]},{},[11]);
