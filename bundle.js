@@ -6189,6 +6189,17 @@ const onLine = (line, query, options, foundMatch) => {
 		frequency: params[5]
 	}
 
+	if (options.multiple) {
+		for (let i in matches) {
+			if (matches[i] && matches[i].item === undefined) {
+				if (matches[i].input === item.hanzi) {
+					matches[i].item = item
+				}
+			}
+		}
+		return
+	}
+
 	if (options.search) {
 		if (item.definition.match(new RegExp('\\b(' + query + ')\\b'))) {
 			matches.push(item)
@@ -6211,6 +6222,11 @@ const onLine = (line, query, options, foundMatch) => {
 }
 
 const onDone = (options, yay, nay) => {
+	if (options.multiple) {
+		matches = matches.map((match) => match.item || match.input)
+		yay && yay(matches)
+		return
+	}
 	if (matches.length > 0) {
 		matches = matches.map((match) => {
 			let code = match.cangjie.split('')
@@ -6244,6 +6260,10 @@ const loadData = (done) => {
 }
 
 const find = (query, options = {}) => new Promise((yay, nay) => {
+	if (options.multiple) {
+		matches = query.split('').map((input) => ({input}))
+	}
+
 	if (isNode) {
 		const rl = readline.createInterface({
 			input: fs.createReadStream(path.join(__dirname, './data.txt'))
@@ -6280,28 +6300,17 @@ module.exports = find
 'use strict'
 
 const findHanzi = require('find-hanzi')
-const so = require('so')
 
 const convert = (text) => new Promise((yay, nay) => {
-	so(function*(){
-		let chars = text.split('')
-		chars = chars.filter((char) => char != ' ')
-
-		let list = []
-
-		for (let char of chars) {
-			yield findHanzi(char).then((data) => {
-				list.push(data[0].pinyin)
-			}, (error) => nay('hanzi-to-pinyin -> ' + error))
-		}
-
-		yay(list.join(' '))
-	})()
+	findHanzi(text, {multiple: true}).then((data) => {
+		const result = data.map((item) => item.pinyin)
+		yay(result.join(' '))
+	}, (error) => nay('hanzi-to-pinyin -> ' + error))
 })
 
 module.exports = convert
 
-},{"find-hanzi":302,"so":312}],304:[function(require,module,exports){
+},{"find-hanzi":302}],304:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6539,6 +6548,9 @@ const utils = require('pinyin-utils')
 
 const convert = (text, options = {}) => new Promise((yay, nay) => {
 	pinyinOrHanzi(text).then((type) => {
+		if (type === 0) {
+			yay(text)
+		}
 		if (type === 1) {
 			hanziToPinyin(text).then((data) => {
 				if (options.numbered) {
@@ -6579,7 +6591,6 @@ module.exports = convert
 
 const utils = require('pinyin-utils')
 const findHanzi = require('find-hanzi')
-const so = require('so')
 
 const check = (text) => new Promise((yay, nay) => {
 	if (text.match(new RegExp('[a-zA-ZüÜ]+[1-4]'))) {
@@ -6596,25 +6607,22 @@ const check = (text) => new Promise((yay, nay) => {
 		}
 	}
 	
-	so(function*(){
-		const chars = text.split('')
-		for (let char of chars) {
-			yield findHanzi(char).then((data) => {
-				for (let item of data) {
-					if (text.match(item.hanzi)) {
-						yay(1)
-						return
-					}
+	findHanzi(text, {multiple: true}).then((data) => {
+		if (data && data.length > 0) {
+			for (let item of data) {
+				if (item.hanzi && text.match(item.hanzi)) {
+					yay(1)
+					return
 				}
-			}, (error) => nay('pinyin-or-hanzi -> ' + error))
+			}
 		}
-		nay('Not a Chinese language')
-	})()
+		yay(0)
+	}, (error) => nay('pinyin-or-hanzi -> ' + error))
 })
 
 module.exports = check
 
-},{"find-hanzi":302,"pinyin-utils":309,"so":312}],307:[function(require,module,exports){
+},{"find-hanzi":302,"pinyin-utils":309}],307:[function(require,module,exports){
 'use strict'
 
 const wordsData = require('./words.json')
@@ -7780,48 +7788,4 @@ process.umask = function() { return 0; };
 );
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":310}],312:[function(require,module,exports){
-'use strict';
-
-/**
- * Expose `so` (ES6 friedly)
- */
-
-module.exports = so['default'] = so.so = so
-
-/**
- * Converts `fn` generator function
- * into function that returns a promise while handling
- * all `yield` calls in the body as blocking promises.
- * Based on ForbesLindesay's presentation with slight modification
- * http://pag.forbeslindesay.co.uk/#/
- *
- * @param {GeneratorFunction} fn
- * @return {Function}
- *
- * @api public
- */
-
-function so(fn) {
-  return function() {
-    var gen = fn.apply(this, arguments);
-    try {
-      return resolved();
-    } catch (e) {
-      return Promise.reject(e);
-    }
-    function resolved(res) { return next(gen.next(res)); }
-    function rejected(err) { return next(gen.throw(err)); }
-    function next(ret) {
-      var val = ret.value;
-      if (ret.done) {
-        return Promise.resolve(val);
-      } else if ('function' === typeof val.then) {
-        return val.then(resolved, rejected);
-      } else {
-        throw new Error('Expected Promise');
-      }
-    }
-  };
-}
-},{}]},{},[1]);
+},{"_process":310}]},{},[1]);
