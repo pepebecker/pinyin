@@ -3,14 +3,22 @@
 require("babel-core/register")
 require("babel-polyfill")
 
-const convert = require('pinyin-converter')
+const convert = require('pinyin-convert')
+const split = require('pinyin-split')
 
 const execute = () => {
 	const text = document.querySelector('#input').value
 	if (text) {
-		convert(text, {keepSpaces: true}).then((data) => {
-			document.querySelector('#output').innerHTML = data
-		}, console.log)
+		const re = /^[a-züāáǎàēéěèōóǒòūúǔùīíǐì]+$/i
+		if (re.test(text)) {
+			split(text).then((data) => {
+				document.querySelector('#output').innerHTML = data.join(' ')
+			}, console.log)
+		} else {
+			convert(text, {keepSpaces: true}).then((data) => {
+				document.querySelector('#output').innerHTML = data
+			}, console.log)
+		}
 	}
 }
 
