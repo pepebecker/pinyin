@@ -16,8 +16,21 @@ body {
 	border: 1px solid #CCC;
 }
 
-#convert {
+#buttons {
+	display: flex;
 	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#convert {
+	margin-right: 5px;
+}
+
+#split {
+	margin-left: 5px;
+}
+
+button {
 	box-sizing: border-box;
 	width: 100%;
 	border-radius: 0;
@@ -28,21 +41,20 @@ body {
 	transition: background ease 0.2s;
 }
 
-#convert:hover {
+button:hover {
 	background: rgb(231, 76, 60);
 }
 
-#convert:active {
-	border: none;
+button:active {
+	border: 2px solid #d35400;
 	background: #d35400;
 }
 
-#convert:focus {
+button:focus {
 	outline: none;
 }
 
 #output {
-	margin-top: 10px;
 	width: calc(100% - 20px);
 	padding: 10px;
 	min-height: 20px;

@@ -22,28 +22,43 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var pinyin = require('pinyin-api');
 
-    var execute = function execute() {
-      var text = document.querySelector('#input').value;
+    var getInput = function getInput() {
+      return document.querySelector('#input').value;
+    };
+
+    var convert = function convert() {
+      var text = getInput();
       if (text) {
-        var re = /^[a-züāáǎàēéěèōóǒòūúǔùīíǐì]+$/i;
-        if (re.test(text)) {
-          pinyin.split(text).then(function (data) {
-            document.querySelector('#output').innerHTML = data.join(' ');
-          }, console.log);
-        } else {
-          pinyin.convert(text, { keepSpaces: true }).then(function (data) {
-            document.querySelector('#output').innerHTML = data;
-          }, console.log);
-        }
+        pinyin.convert(text, { keepSpaces: true }).then(function (data) {
+          document.querySelector('#output').innerHTML = data;
+        }, console.log);
       }
     };
 
-    document.querySelector('#convert').addEventListener('click', execute);
+    var split = function split() {
+      var text = getInput();
+      if (text) {
+        pinyin.split(text).then(function (data) {
+          document.querySelector('#output').innerHTML = data.join(' ');
+        }, console.log);
+      }
+    };
+
+    document.querySelector('#convert').addEventListener('click', convert);
+    document.querySelector('#split').addEventListener('click', split);
 
     document.querySelector('#input').addEventListener('keyup', function (event) {
       if (event.keyCode == 13) {
         event.preventDefault();
-        execute();
+        var text = getInput();
+        if (text) {
+          var re = /^[a-züāáǎàēéěèōóǒòūúǔùīíǐì]+$/i;
+          if (re.test(text)) {
+            split();
+          } else {
+            convert();
+          }
+        }
       }
     });
   }, { "babel-core/register": 2, "babel-polyfill": 3, "pinyin-api": 301 }], 2: [function (require, module, exports) {
