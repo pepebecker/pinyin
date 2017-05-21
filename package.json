@@ -1,8 +1,13 @@
 {
   "name": "pinyin",
   "version": "1.0.0",
-  "description": "",
+  "description": "Webapp to convert between Pinyin with tone marks and Pinyin with tone numbers.",
   "main": "index.js",
+  "files": [
+    "index.html",
+    "bundle.js",
+    "style.css"
+  ],
   "scripts": {
     "build": "browserify index.js -o bundle.js",
     "watch": "watchify index.js -o bundle.js",
@@ -11,8 +16,7 @@
   "author": "Pepe Becker <mail@pepebecker.com> (http://pepebecker.com)",
   "license": "MIT",
   "dependencies": {
-    "pinyin-convert": "^1.0.2",
-    "pinyin-split": "^1.0.2"
+    "pinyin-api": "pepebecker/pinyin-api"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
