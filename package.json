@@ -9,9 +9,10 @@
     "style.css"
   ],
   "scripts": {
-    "build": "browserify index.js -o bundle.js",
     "watch": "watchify index.js -o bundle.js",
-    "babel": "babel bundle.js --out-file bundle.js --presets=es2015"
+    "bundle": "browserify index.js -o bundle.js",
+    "babel": "babel bundle.js --out-file bundle.js --presets=es2015",
+    "build": "npm run bundle && npm run babel"
   },
   "author": "Pepe Becker <mail@pepebecker.com> (http://pepebecker.com)",
   "license": "MIT",
