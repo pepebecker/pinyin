@@ -52,7 +52,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         event.preventDefault();
         var text = getInput();
         if (text) {
-          var re = /^[a-züāáǎàēéěèōóǒòūúǔùīíǐì]+$/i;
+          var re = /^[a-züāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+$/i;
           if (re.test(text)) {
             split();
           } else {

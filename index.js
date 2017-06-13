@@ -33,7 +33,7 @@ document.querySelector('#input').addEventListener('keyup', (event) => {
 		event.preventDefault()
 		const text = getInput()
 		if (text) {
-			const re = /^[a-züāáǎàēéěèōóǒòūúǔùīíǐì]+$/i
+			const re = /^[a-züāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+$/i
 			if (re.test(text)) {
 				split()
 			} else {
