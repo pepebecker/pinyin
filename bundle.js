@@ -350,9 +350,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, { "./_a-function": 6, "./_invoke": 47, "./_is-object": 52 }], 20: [function (require, module, exports) {
     // getting tag from 19.1.3.6 Object.prototype.toString()
     var cof = require('./_cof'),
-        TAG = require('./_wks')('toStringTag')
+        TAG = require('./_wks')('toStringTag'
     // ES3 wrong here
-    ,
+    ),
         ARG = cof(function () {
       return arguments;
     }()) == 'Arguments';
@@ -370,9 +370,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       // @@toStringTag case
       : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
       // builtinTag case
-      : ARG ? cof(O)
+      : ARG ? cof(O
       // ES3 arguments fallback
-      : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+      ) : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
     };
   }, { "./_cof": 21, "./_wks": 120 }], 21: [function (require, module, exports) {
     var toString = {}.toString;
@@ -674,14 +674,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         ,
             THROWS_ON_PRIMITIVES = fails(function () {
           instance.has(1);
-        })
+        }
         // most early implementations doesn't supports iterables, most modern - not close it correctly
-        ,
+        ),
             ACCEPT_ITERABLES = $iterDetect(function (iter) {
           new C(iter);
-        }) // eslint-disable-line no-new
+        } // eslint-disable-line no-new
         // for early implementations -0 and +0 not the same
-        ,
+        ),
             BUGGY_ZERO = !IS_WEAK && fails(function () {
           // V8 ~ Chromium 42- fails only with 5+ elements
           var $instance = new C(),
@@ -2397,9 +2397,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return isTAIndex(target, key = toPrimitive(key, true)) ? propertyDesc(2, target[key]) : gOPD(target, key);
       };
       var $setDesc = function defineProperty(target, key, desc) {
-        if (isTAIndex(target, key = toPrimitive(key, true)) && isObject(desc) && has(desc, 'value') && !has(desc, 'get') && !has(desc, 'set')
+        if (isTAIndex(target, key = toPrimitive(key, true)) && isObject(desc) && has(desc, 'value') && !has(desc, 'get') && !has(desc, 'set'
         // TODO: add validation descriptor w/o calling accessors
-        && !desc.configurable && (!has(desc, 'writable') || desc.writable) && (!has(desc, 'enumerable') || desc.enumerable)) {
+        ) && !desc.configurable && (!has(desc, 'writable') || desc.writable) && (!has(desc, 'enumerable') || desc.enumerable)) {
           target[key] = desc.value;
           return target;
         } else return dP(target, key, desc);
@@ -3920,9 +3920,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     $export($export.S + $export.F, 'Object', { assign: require('./_object-assign') });
   }, { "./_export": 35, "./_object-assign": 68 }], 183: [function (require, module, exports) {
-    var $export = require('./_export');
+    var $export = require('./_export'
     // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-    $export($export.S, 'Object', { create: require('./_object-create') });
+    );$export($export.S, 'Object', { create: require('./_object-create') });
   }, { "./_export": 35, "./_object-create": 69 }], 184: [function (require, module, exports) {
     var $export = require('./_export');
     // 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
@@ -6597,9 +6597,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
                   this._bodyText = body.toString();
                 } else if (support.arrayBuffer && support.blob && isDataView(body)) {
-                  this._bodyArrayBuffer = bufferClone(body.buffer);
+                  this._bodyArrayBuffer = bufferClone(body.buffer
                   // IE 10-11 can't handle a DataView body.
-                  this._bodyInit = new Blob([this._bodyArrayBuffer]);
+                  );this._bodyInit = new Blob([this._bodyArrayBuffer]);
                 } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
                   this._bodyArrayBuffer = bufferClone(body);
                 } else {
@@ -6961,7 +6961,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var queryString = require('query-string');
 
-    var baseURL = 'https://pinyin-rest.pepebecker.com/pinyin/';
+    var baseURL = 'https://pinyin-rest-fiuzscygqe.now.sh/pinyin/';
 
     var convert = function convert(text) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
