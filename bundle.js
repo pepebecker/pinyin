@@ -6961,7 +6961,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var queryString = require('query-string');
 
-    var baseURL = 'https://pinyin-rest-fiuzscygqe.now.sh/pinyin/';
+    var baseURL = 'https://pinyin-rest.pepebecker.com/pinyin/';
 
     var convert = function convert(text) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
