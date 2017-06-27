@@ -24,4 +24,4 @@ Webinterface for my [`pinyin-convert`](https://github.com/pepebecker/pinyin-conv
 
 ## Contributing
 
-If you **have a question**, **found a bug** or want to **propose a feature**, have a look at [the issues page](https://github.com/pepebecker/pinyin-rest/issues).
+If you **have a question**, **found a bug** or want to **propose a feature**, have a look at [the issues page](https://github.com/pepebecker/pinyin/issues).
