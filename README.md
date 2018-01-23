@@ -1,5 +1,7 @@
 # Pinyin Convert Webinterface
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pepebecker/pinyin.svg)](https://greenkeeper.io/)
+
 [![dependency status](https://img.shields.io/david/pepebecker/pinyin.svg)](https://david-dm.org/pepebecker/pinyin)
 [![dev dependency status](https://img.shields.io/david/dev/pepebecker/pinyin.svg)](https://david-dm.org/pepebecker/pinyin#info=devDependencies)
 [![MIT-licensed](https://img.shields.io/github/license/pepebecker/pinyin.svg)](https://opensource.org/licenses/MIT)
