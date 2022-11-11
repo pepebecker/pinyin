@@ -7,7 +7,7 @@
 
 Webinterface for my [`pinyin-convert`](https://github.com/pepebecker/pinyin-convert) module which let's you convert Chinese characters to pinyin and convert between pinyin with numbered tones and pinyin with tone marks.
 
-### [`http://pinyin.pepe.asia`](http://pinyin.pepe.asia)
+### [`https://pinyin.pepe.asia`](https://pinyin.pepe.asia)
 
 ## Related
 
